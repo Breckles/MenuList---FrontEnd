@@ -8,7 +8,7 @@
 	</div>
 </div>
 
-<div class="row recipeRow" ng-repeat="recipe in recipesCtrl.recipes">
+<div class="row recipeRow" ng-repeat="recipe in recipesCtrl.recipes.slice(((recipesCtrl.currentPage-1) * recipesCtrl.itemsPerPage), ((recipesCtrl.currentPage) * recipesCtrl.itemsPerPage))">
 	<div class="col-md-4 recipeImage">
 		<img ng-src="{{recipesCtrl.imageRequestUrl}}{{recipe.image}}">
 	</div>
@@ -17,8 +17,10 @@
 		Description: {{recipe.description}}<br>
 		Instructions: {{recipe.instructions}}<br>
 		Serves: {{recipe.num_served}}<br>
+		Private: {{recipe.private}}<br>
 	</div>
 </div>
+<uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>
 
 
 
