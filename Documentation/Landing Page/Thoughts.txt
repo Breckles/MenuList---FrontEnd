@@ -1,0 +1,8 @@
+The user will be able to perform every action from the landing page.
+	Actions:
+		- CRUD week's menu 
+		- CRUD Recipes
+		- CRUD Ingredients
+		
+		
+Available areas (1 for each entity) will be available near the top

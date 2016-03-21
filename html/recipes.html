@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-md-10"></div>
+	<div class="col-md-2">
+		<!-- <button uib-popover-template="'{{recipesCtrl.addRecipeUrl}}'" popover-placement= "auto bottom-left" type="button" class="btn btn-default" id="addRecipeBtn">Add Recipe</button> -->
+		<div ng-controller="RecipesModalCreateCtrl">
+			<button type="button" class="btn btn-default" ng-click="open()" id="addRecipeBtn">Add Recipe</button>
+		</div>
+	</div>
+</div>
+
+<div class="row recipeRow" ng-repeat="recipe in recipesCtrl.recipes">
+	<div class="col-md-4 recipeImage">
+		<img ng-src="{{recipesCtrl.imageRequestUrl}}{{recipe.image}}">
+	</div>
+	<div class="col-md-8 recipeInfo">
+		Name: {{recipe.name}}<br>
+		Description: {{recipe.description}}<br>
+		Instructions: {{recipe.instructions}}<br>
+		Serves: {{recipe.num_served}}<br>
+	</div>
+</div>
+
+
+
+

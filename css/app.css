@@ -1,0 +1,32 @@
+#pill-selector{
+	display: flex;
+	justify-content: center;
+	padding-top: 2em;
+}
+
+#recipesPanel ul{
+	list-style-type: none;
+}
+
+.recipeRow{
+	border: 1px solid black;
+	padding: 1em;
+}
+
+
+#addRecipeBtn{
+	float: right;
+	margin-bottom: 1em;
+	margin-right: 0em;
+	background-color: rgb(51, 122, 183);
+	color: rgb(255, 255, 255);
+}
+
+.createForm{
+	padding: 1em;
+}
+
+.submitButton{
+	background-color: rgb(51, 122, 183);
+	color: rgb(255, 255, 255);
+}

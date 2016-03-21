@@ -1,0 +1,5 @@
+Should recipes have reviews?
+
+I think EVERYTHING gets loaded (all requests made and everything rendered) whenever the landing page is generated. Look into making the requests and loading the data ONLY when required.
+
+For images, every time one is displayed, I believe a request is made to the backend. This can make for a hell of a lot of requests, is there a way to send all the required images at once?
