@@ -4,27 +4,34 @@
 
 
 	var recipesController;
-	var addTemplate = 'http://localhost/MenuList/recipes/add';
+	var recipeJustAdded;
 
 	//function to open the modal
+	//@uibModal : The uibModal service dependancy
+	//@animationsEnabled : true/false for modal opening animation
+	//@template : The HTML content of the modal
 	var open = function(uibModal, animationsEnabled, template) {
 		console.log('Opening');
 		var modalInstance = uibModal.open({
 			animation: animationsEnabled,
-			template: template,
+			templateUrl: template,
 			controller: 'RecipesModalCreateInstanceCtrl',
+			size: 'lg recipeCreateModalDialog', //only way I found to add class to the modal dialog
+			// windowClass: 'recipeCreateModal', 
 			resolve: {
 				'uibModal': uibModal
 			}			
 		});
 	};
 
+
 	///////////////// Directives ////////////////////
+
 
 	recipesModule.directive('recipes', function() {
 		return {
 			restrict: 'E',
-			templateUrl: 'html/recipes.html',
+			templateUrl: 'html/recipes/recipes.html',
 			controller: ['$http', '$scope', function($http, $scope) {
 				
 				recipesController = this;
@@ -42,7 +49,6 @@
 
 
 				this.imageRequestUrl = 'http://localhost/MenuList/recipes/image/';
-				this.addRecipeUrl = 'http://localhost/MenuList/recipes/add';
 
 				//pagination implementation
 				recipesController.itemsPerPage = 10;
@@ -51,36 +57,23 @@
 				$scope.setPage = function (pageNo) {
 					recipesController.currentPage = pageNo;
 				};
-
-
-
 			}],
 			controllerAs: 'recipesCtrl'
 		};
 	});	
 
 
+	///////////////// Controllers ////////////////////////
+
+
 	recipesModule.controller('RecipesModalCreateCtrl', function($http, $scope, $uibModal) {
 		$scope.animationsEnabled = true;
-		var template;
-
-		//get the template to add a new recipe, assign the response data (html) to the variable 'addTemplate'
-		$http.get('http://localhost/MenuList/recipes/add').success(function(data) {
-			template = data;
-		});
 
 		//calls the open function in the global scope, passes the $uibModal dependancy, as well as a true value for animation
 		$scope.open = function() {
-			open($uibModal, true, template);
+			recipeJustAdded = false;
+			open($uibModal, true, 'html/recipes/recipesModalCreate.html');
 		}
-		// $scope.open = function() {
-		// 	console.log('Opening');
-		// 	var modalInstance = $uibModal.open({
-		// 		animation: $scope.animationsEnabled,
-		// 		template: addTemplate,
-		// 		controller: 'RecipesModalCreateInstanceCtrl'
-		// 	});
-		// };
 	});
 
 
@@ -96,6 +89,7 @@
 			private: true
 		}
 
+		$scope.newRecipeIngredients = [];
 		
 
 		//as the recipe is being created, the entered values will be kept in this variable. The 'private' property is controlled by a checkbox,
@@ -110,6 +104,10 @@
 			$uibModalInstance.dismiss('cancel');
 		};
 
+		$scope.recipeJustAdded = function() {
+			return recipeJustAdded;
+		};
+
 
 		//this is messed up and I will have to find a different way to do things and implement best practice.
 		//essentially, the function makes the post request to create a new recipe. Upon success, it creates another 
@@ -121,20 +119,17 @@
 
 			console.log($scope.newRecipe);
 			$http.post('http://localhost/MenuList/recipes/add', $scope.newRecipe).then( function addSuccess(response) {
-				console.log(response);
-				template = response.data;
+				// template = response.data;
 
-				//add the recipe add the beginning of the recipes array
+				//add the recipe at the beginning of the recipes array
 				recipesController.recipes.unshift($scope.newRecipe);
 
 				//update info for pagination and set back to first page
-				recipesController.currentPage = 1;
 				recipesController.totalItems += 1;
-				
+				recipesController.currentPage = 1;
 
-				console.log(recipesController.recipes.length);
-
-				open(uibModal, false, template);
+				recipeJustAdded = true;
+				open(uibModal, false, 'html/recipes/recipesModalCreate.html');
 
 				$scope.newRecipe = {};
 
@@ -143,58 +138,6 @@
 			function addFail(response) {
 				console.log(response.status + "\n" + response.statusText);
 			});
-
-
-			// $scope.addSuccess = function(data) {
-			// 	template = data;
-			// 	recipesController.recipes.unshift($scope.newRecipe);
-
-			// 	open(uibModal, false, template);
-
-			// 	$scope.newRecipe = {};
-
-			// 	$uibModalInstance.dismiss('cancel');
-			// };
-
-			// $scope.addFail = function(data, status, statusText) {
-			// 	console.log(status + "\n" + statusText);
-			// };
 		};
-
-
 	});
-
-
-
-
-
-
-
-
-
-
-
 })();
-
-
-
-
-// app.directive('productPanels', function() {
-// 		return {
-// 			restrict: 'E',
-// 			templateUrl: 'product-panels.html',
-// 			controller: function() {
-// 				this.tab = 1;
-
-// 				this.selectTab = function(setTab) {
-// 					this.tab = setTab;
-// 				};
-
-// 				this.isSelected = function(checkTab) {
-// 					return this.tab === checkTab;
-// 				};
-// 			},
-// 			controllerAs: 'panel'
-
-// 		};
-// 	});
