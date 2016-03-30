@@ -1,30 +1,33 @@
 <div class="row"> 
 	<div class="col-md-6">
-		{{RecipesModalCreateInstanceCtrl.recipeJustAdded()}}
 		<div role="alert" class="alert fade in alert-success" ng-show="recipeJustAdded()">The recipe has been saved.</div>
-		<ng-include src="'http://localhost/MenuList/recipes/add'"></ng-include>
+		<div role="alert" class="alert fade in alert-danger" ng-show="recipeHasNoIngredients()">The recipe must have at least 1 ingredient.</div>
+		<ng-include src="'html/recipes/recipesCreateForm.html'"></ng-include>
 	</div> 
 	<div class="col-md-6"> 
 		<div class="row"> 
 			<div class="col-md-12"> 
-				RecipeIngredients List goes here 
+				<legend>Recipe Ingredients</legend>				
+				<ul class="recipeModalCreateIngredientsList">
+					<li class="recipeModalCreateIngredientsListItem" ng-repeat="newRecipeIngredient in newRecipeIngredients">
+						Ingredient: {{newRecipeIngredient.ingredient_id.name}}<br>
+						Quantity: {{newRecipeIngredient.quantity}}<br>
+						UOM: {{newRecipeIngredient.uom_id.name}} ({{newRecipeIngredient.uom_id.description}})<br>
+						Instructions: {{newRecipeIngredient.instructions}}<br>
+					</li>
+					<li ng-show="isNewRecipeIngredientsEmpty()"><i>No Ingredients have been added to this recipe yet</i></li>
+				</ul>
 			</div> 
 		</div> 
 		<div class="row"> 
 			<div class="col-md-12"> 
-				<ng-include src="'http://localhost/MenuList/recipe-ingredients/add'"></ng-include>
-				<button class="btn btn-primary" type="submit" ng-click="submit()">Add Recipe Ingredient</button>
+				<ng-include src="'html/recipeIngredients/recipeIngredientsCreateForm.html'"></ng-include>
 			</div> 
 		</div> 
 	</div> 	
 </div>
 <div class="row">
-	<!-- <div class="col-md-4"></div>
-	<div class="col-md-4"> -->
-		<div class="modal-footer modalSubmitCancel">
-	        <button class="btn btn-primary" type="submit" ng-click="submit()">Save Recipe</button>
-	        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-    	</div> 
-	<!-- </div>
-	<div class="col-md-4"></div> -->
+	<div class="modal-footer modalSubmitCancel">
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+	</div>
 </div>

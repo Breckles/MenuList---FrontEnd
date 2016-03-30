@@ -42,3 +42,23 @@
 .modalSubmitCancel {
 	text-align: center;
 }
+
+.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus {
+	background-color: rgb(51, 122, 183);
+	color: rgb(255, 255, 255);
+}
+
+
+
+/************** Form Validation **************/
+label.required:before{
+	content: "*";
+	color: red;
+}
+.ng-invalid.ng-dirty {
+	border-color: #FA787E;
+}
+
+.ng-valid.ng-dirty {
+	border-color: #78FA89;
+}
