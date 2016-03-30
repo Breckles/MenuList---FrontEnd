@@ -48,6 +48,15 @@
 	color: rgb(255, 255, 255);
 }
 
+.recipeActions {
+	text-align: right;
+}
+
+
+.recipeViewIngredients, .recipeViewInstructions {
+	margin: 1em;
+}
+
 
 
 /************** Form Validation **************/
@@ -62,3 +71,5 @@ label.required:before{
 .ng-valid.ng-dirty {
 	border-color: #78FA89;
 }
+
+

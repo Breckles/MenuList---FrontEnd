@@ -6,6 +6,7 @@
 	var recipesController;
 	var recipeJustAdded;
 	var recipeHasNoIngredients;
+	var recipeToViewId;
 
 	//function to open the modal
 	//@uibModal : The uibModal service dependancy
@@ -59,6 +60,10 @@
 				$scope.setPage = function (pageNo) {
 					recipesController.currentPage = pageNo;
 				};
+
+				$scope.displayRecipe = function (index) {
+
+				}
 			}],
 			controllerAs: 'recipesCtrl'
 		};
@@ -196,6 +201,36 @@
 				recipeHasNoIngredients = true;
 			}
 
+		};
+	});
+
+
+	recipesModule.controller('RecipesModalViewCtrl', function($scope, $uibModal) {
+		$scope.animationsEnabled = true;
+
+		//calls the open function in the global scope, passes the $uibModal dependancy, as well as a true value for animation
+		$scope.open = function(recipeId) {
+			recipeToViewId = recipeId;
+			$uibModal.open({
+				animation: true,
+				templateUrl: 'html/recipes/recipesModalView.html',
+				controller: 'RecipesModalViewInstanceCtrl',
+				size: 'lg', //only way I found to add class to the modal dialog							
+			});
+		};
+	});
+
+	recipesModule.controller('RecipesModalViewInstanceCtrl', function($http, $scope, $uibModalInstance) {
+		var fetchRecipeUrl = "http://localhost/MenuList/recipes/view/" + recipeToViewId + ".json";
+		$scope.imageRequestUrl = 'http://localhost/MenuList/recipes/image/';
+		$scope.recipe = {};
+
+		$http.get(fetchRecipeUrl).success(function(data) {
+			$scope.recipe = data.recipe;
+		});
+
+		$scope.close = function() {
+			$uibModalInstance.dismiss('cancel');
 		};
 	});
 })();

@@ -11,12 +11,18 @@
 	<div class="col-md-4 recipeImage">
 		<img ng-src="{{recipesCtrl.imageRequestUrl}}{{recipe.image}}">
 	</div>
-	<div class="col-md-8 recipeInfo">
-		Name: {{recipe.name}}<br>
-		Description: {{recipe.description}}<br>
-		Instructions: {{recipe.instructions}}<br>
-		Serves: {{recipe.num_served}}<br>
-		Private: {{recipe.private}}<br>
+	<div class="col-md-8">
+		<div class="row recipeInfo">
+			Name: {{recipe.name}}<br>
+			Description: {{recipe.description}}<br>
+			Instructions: {{recipe.instructions}}<br>
+			Serves: {{recipe.num_served}}<br>
+			Private: {{recipe.private}}<br>
+		</div>
+		<div class="row recipeActions">
+			<button type="button" class="recipeViewBtn" ng-click="displayRecipe($index)"></button>
+			
+		</div>
 	</div>
 </div>
 <uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>
