@@ -7,7 +7,7 @@
 
 	appModule.controller('appModuleController', ['$http', function($http) {
 
-		this.currentPanel = 'mealSchedulePanel';
+		this.currentPanel = 'recipesPanel';
 
 		this.isPanelSelected = function(panel) {
 			return this.currentPanel === panel;

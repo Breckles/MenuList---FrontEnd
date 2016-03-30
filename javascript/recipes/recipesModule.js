@@ -13,13 +13,11 @@
 	//@animationsEnabled : true/false for modal opening animation
 	//@template : The HTML content of the modal
 	var open = function(uibModal, animationsEnabled, template) {
-		console.log('Opening');
 		var modalInstance = uibModal.open({
 			animation: animationsEnabled,
 			templateUrl: template,
 			controller: 'RecipesModalCreateInstanceCtrl',
 			size: 'lg recipeCreateModalDialog', //only way I found to add class to the modal dialog
-			// windowClass: 'recipeCreateModal', 
 			resolve: {
 				'uibModal': uibModal
 			}			
@@ -44,10 +42,8 @@
 				var fetchRecipesIndexUrl = 'http://localhost/MenuList/recipes.json';
 
 				$http.get(fetchRecipesIndexUrl).success(function(data){
-					console.log(data.recipes[0]);
 					recipesController.recipes = data.recipes;
 					recipesController.totalItems = recipesController.recipes.length;
-					console.log(recipesController.recipes.length);
 				});
 
 
@@ -166,21 +162,18 @@
 				//The recipeIngredientsList elements must be formatted so that ingredient_id and uom_id have the proper id values, rather than the ingredient and uom objects
 				for(var i = 0; i < $scope.newRecipeIngredients.length; i++)
 				{
-					console.log($scope.newRecipeIngredients[i]);
 					$scope.newRecipeIngredients[i].uom_id = $scope.newRecipeIngredients[i].uom_id.id;
 					$scope.newRecipeIngredients[i].ingredient_id = $scope.newRecipeIngredients[i].ingredient_id.id;
-					console.log($scope.newRecipeIngredients[i]);
 				}
 
 				//now assign the newRecipeIngredients array to newRecipe.ingredients
 				$scope.newRecipe.recipe_ingredients = $scope.newRecipeIngredients;
 
 				console.log($scope.newRecipe);
-				$http.post('http://localhost/MenuList/recipes/add', $scope.newRecipe).then( function addSuccess(response) {
-					
-
+				$http.post('http://localhost/MenuList/recipes/add.json', $scope.newRecipe).then( function addSuccess(response) {
+					//the response includes the newly created recipe along with the proper id
 					//add the recipe at the beginning of the recipes array
-					recipesController.recipes.unshift($scope.newRecipe);
+					recipesController.recipes.unshift(response.data.recipe);
 
 					//update info for pagination and set back to first page
 					recipesController.totalItems += 1;
@@ -198,6 +191,7 @@
 				});
 			}
 			else {
+				//will make alert show up in form
 				recipeHasNoIngredients = true;
 			}
 

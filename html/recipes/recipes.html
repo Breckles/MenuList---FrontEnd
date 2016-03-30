@@ -1,5 +1,7 @@
 <div class="row">
-	<div class="col-md-10"></div>
+	<div class="col-md-10">
+		<uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>
+	</div>
 	<div class="col-md-2">
 		<div ng-controller="RecipesModalCreateCtrl">
 			<button type="button" class="btn btn-default" ng-click="open()" id="addRecipeBtn">Add Recipe</button>
@@ -15,13 +17,12 @@
 		<div class="row recipeInfo">
 			Name: {{recipe.name}}<br>
 			Description: {{recipe.description}}<br>
-			Instructions: {{recipe.instructions}}<br>
 			Serves: {{recipe.num_served}}<br>
 			Private: {{recipe.private}}<br>
 		</div>
 		<div class="row recipeActions">
 			<div ng-controller="RecipesModalViewCtrl">
-				<button type="button" class="btn btn-default" id="recipeViewBtn" ng-click="open(recipe.id)">View Recipe</button>	
+				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="open(recipe.id)">View Recipe</button>	
 			</div>		
 		</div>
 	</div>

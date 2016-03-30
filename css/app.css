@@ -43,7 +43,8 @@
 	text-align: center;
 }
 
-.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus {
+.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus, .viewRecipeBtn,
+.viewRecipeBtn:focus {
 	background-color: rgb(51, 122, 183);
 	color: rgb(255, 255, 255);
 }
@@ -55,6 +56,11 @@
 
 .recipeViewIngredients, .recipeViewInstructions {
 	margin: 1em;
+}
+
+/*Make sure line breaks are rendered*/
+.angular-with-newlines {
+	white-space: pre-wrap;
 }
 
 
