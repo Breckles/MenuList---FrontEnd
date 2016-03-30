@@ -8,7 +8,7 @@
 	list-style-type: none;
 }
 
-.recipeRow{
+.recipeRow, .ingredientRow{
 	border: 1px solid black;
 	padding: 1em;
 }

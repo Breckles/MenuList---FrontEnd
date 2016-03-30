@@ -1,6 +1,6 @@
 (function(){
 
-	var appModule = angular.module('appModule', ['ui.bootstrap', 'recipesModule']);
+	var appModule = angular.module('appModule', ['ui.bootstrap', 'recipesModule', 'ingredientsModule']);
 
 	var requestURL = "";
 

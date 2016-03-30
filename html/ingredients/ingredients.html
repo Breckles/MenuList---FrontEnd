@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-10">
+		<uib-pagination total-items="ingredientsCtrl.totalItems" ng-model="ingredientsCtrl.currentPage" class="pagination-md" items-per-page="ingredientsCtrl.itemsPerPage"></uib-pagination>
+	</div>
+	<div class="col-md-2">
+		<!-- <div ng-controller="IngredientsModalCreateCtrl">
+			<button type="button" class="btn btn-default" ng-click="open()" id="addIngredientBtn">Add Ingredient</button>
+		</div> -->
+	</div>
+</div>
+
+<div class="row ingredientRow" ng-repeat="ingredient in ingredientsCtrl.ingredients.slice(((ingredientsCtrl.currentPage-1) * ingredientsCtrl.itemsPerPage), ((ingredientsCtrl.currentPage) * ingredientsCtrl.itemsPerPage))">
+	<div class="col-md-4 ingredientImage">
+		<img ng-src="{{ingredientsCtrl.imageRequestUrl}}{{ingredient.image}}">
+	</div>
+	<div class="col-md-8">
+		<div class="row ingredientInfo">
+			Name: {{ingredient.name}}<br>
+			Category: {{ingredient.category.category}}<br>
+			Information: {{ingredient.information}}<br>
+		</div>
+		<div class="row ingredientActions">
+			<!-- <div ng-controller="IngredientsModalViewCtrl">
+				<button type="button" class="btn btn-default viewIngredientBtn" id="ingredientViewBtn" ng-click="open(ingredient.id)">View Ingredient</button>	
+			</div>	 -->	
+		</div>
+	</div>
+</div>
+<uib-pagination total-items="ingredientsCtrl.totalItems" ng-model="ingredientsCtrl.currentPage" class="pagination-md" items-per-page="ingredientsCtrl.itemsPerPage"></uib-pagination>
