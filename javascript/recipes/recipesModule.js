@@ -8,22 +8,6 @@
 	var recipeHasNoIngredients;
 	var recipeToViewId;
 
-	//function to open the modal
-	//@uibModal : The uibModal service dependancy
-	//@animationsEnabled : true/false for modal opening animation
-	//@template : The HTML content of the modal
-	var open = function(uibModal, animationsEnabled, template) {
-		var modalInstance = uibModal.open({
-			animation: animationsEnabled,
-			templateUrl: template,
-			controller: 'RecipesModalCreateInstanceCtrl',
-			size: 'lg recipeCreateModalDialog', //only way I found to add class to the modal dialog
-			resolve: {
-				'uibModal': uibModal
-			}			
-		});
-	};
-
 
 	///////////////// Directives ////////////////////
 
@@ -76,12 +60,18 @@
 		$scope.open = function() {
 			recipeJustAdded = false;
 			recipeHasNoIngredients = false;
-			open($uibModal, true, 'html/recipes/recipesModalCreate.html');
+			// open($uibModal, true, 'html/recipes/recipesModalCreate.html');
+			$uibModal.open({
+				animation: true,
+				templateUrl: 'html/recipes/recipesModalCreate.html',
+				controller: 'RecipesModalCreateInstanceCtrl',
+				size: 'lg recipeCreateModalDialog', //only way I found to add class to the modal dialog		
+			});
 		}
 	});
 
 
-	recipesModule.controller('RecipesModalCreateInstanceCtrl', function($http, $scope, $uibModalInstance, uibModal) {
+	recipesModule.controller('RecipesModalCreateInstanceCtrl', function($http, $scope, $uibModalInstance) {
 		
 		var fetchUomsIndexUrl = 'http://localhost/MenuList/uoms.json';
 		var fetchIngredientsIndexUrl = "http://localhost/MenuList/ingredients.json";
@@ -179,12 +169,13 @@
 					recipesController.totalItems += 1;
 					recipesController.currentPage = 1;
 
+					//will show a flash message to confirm recipe creation
 					recipeJustAdded = true;
-					open(uibModal, false, 'html/recipes/recipesModalCreate.html');
 
+					//Will clear the forms' fields and clear the list of ingredients so none are displayed
 					$scope.newRecipe = {};
-
-					$uibModalInstance.dismiss('cancel');
+					$scope.newRecipeIngredient = {};
+					$scope.newRecipeIngredients = [];
 				}, 
 				function addFail(response) {
 					console.log(response.status + "\n" + response.statusText);

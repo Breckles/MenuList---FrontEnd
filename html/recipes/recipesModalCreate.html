@@ -10,10 +10,7 @@
 				<legend>Recipe Ingredients</legend>				
 				<ul class="recipeModalCreateIngredientsList">
 					<li class="recipeModalCreateIngredientsListItem" ng-repeat="newRecipeIngredient in newRecipeIngredients">
-						Ingredient: {{newRecipeIngredient.ingredient_id.name}}<br>
-						Quantity: {{newRecipeIngredient.quantity}}<br>
-						UOM: {{newRecipeIngredient.uom_id.name}} ({{newRecipeIngredient.uom_id.description}})<br>
-						Instructions: {{newRecipeIngredient.instructions}}<br>
+						{{newRecipeIngredient.quantity}} {{newRecipeIngredient.uom_id.name}} {{newRecipeIngredient.ingredient_id.name}} <span ng-show="newRecipeIngredient.instructions">({{newRecipeIngredient.instructions}})</span>
 					</li>
 					<li ng-show="isNewRecipeIngredientsEmpty()"><i>No Ingredients have been added to this recipe yet</i></li>
 				</ul>
