@@ -17,19 +17,19 @@
 			restrict: 'E',
 			templateUrl: 'html/recipes/recipes.html',
 			controller: ['$http', '$scope', function($http, $scope) {
+
+				var recipeModel = new recipe();
 				
 				recipesController = this;
 				recipesController.recipes = [];
-
 				recipesController.totalItems = 0;
 
-				var fetchRecipesIndexUrl = 'http://localhost/MenuList/recipes.json';
-
-				$http.get(fetchRecipesIndexUrl).success(function(data){
-					recipesController.recipes = data.recipes;
+				recipeModel.fetchIndex($http).then(function(successResponse) {
+					recipesController.recipes = successResponse.data.recipes;
 					recipesController.totalItems = recipesController.recipes.length;
+				}, function(failResponse) {
+					console.log("Error fetching recipes index.");
 				});
-
 
 				this.imageRequestUrl = 'http://localhost/MenuList/recipes/image/';
 
@@ -42,7 +42,7 @@
 				};
 
 				$scope.displayRecipe = function (index) {
-
+					//TODO
 				}
 			}],
 			controllerAs: 'recipesCtrl'
@@ -76,18 +76,13 @@
 		var fetchUomsIndexUrl = 'http://localhost/MenuList/uoms.json';
 		var fetchIngredientsIndexUrl = "http://localhost/MenuList/ingredients.json";
 
+		$scope.recipeIngredientCreateForm;
+
 
 		$scope.uomsList = [];
 		$scope.ingredientsList = [];
 
-		$scope.newRecipe = {
-			user_id: 1,
-			description: '',
-			instructions: '',
-			image: '',
-			private: true,
-			recipe_ingredients: []
-		};
+		$scope.newRecipe = new recipe();
 
 		$scope.newRecipeIngredient = {
 			// recipe_id: -1,
@@ -108,15 +103,6 @@
 		$http.get(fetchIngredientsIndexUrl).success(function(data) {
 			$scope.ingredientsList = data.ingredients;
 		});
-		
-
-		//as the recipe is being created, the entered values will be kept in this variable. The 'private' property is controlled by a checkbox,
-		//so I must initialize its value to make sure it is sent in the request (otherwise, if the user does not interact with the checkbox,
-		//the 'private' property never gets initialized, which results in a failure to save the recipe in the back-end). Since 'true' is the default value in the back-end, I set the same default value here
-		// $scope.newRecipe = {
-		// 	user_id: 1, //this is for convenience until I implement users
-		// 	private: true
-		// };
 
 		$scope.cancel = function() {
 			$uibModalInstance.dismiss('cancel');
@@ -131,9 +117,11 @@
 		};
 
 
-		$scope.addRecipeIngredient = function() {
+		$scope.addRecipeIngredient = function(recipeIngredientCreateForm) {
 			$scope.newRecipeIngredients.push($scope.newRecipeIngredient);
 			$scope.newRecipeIngredient = {};
+			recipeIngredientCreateForm.$setPristine();
+			$scope.recipeIngredientCreateForm = recipeIngredientCreateForm;//keep a reference to the form controller so we can set the recipeIngredients form to pristine when a recipe is saved
 		};
 
 		$scope.isNewRecipeIngredientsEmpty = function() {
@@ -141,29 +129,17 @@
 		};
 
 
-		//this is messed up and I will have to find a different way to do things and implement best practice.
-		//essentially, the function makes the post request to create a new recipe. Upon success, it creates another 
-		//modal (without animation) with the response body, then closes the first one. This causes an unpleasant flicker on the screen.
-		//I did this because I could not find a way to simply swap the template for the existing modal.
-		$scope.submit = function() {	
+		$scope.submit = function(recipeCreateForm) {	
 			recipeHasNoIngredients = false;
 
 			if($scope.newRecipeIngredients.length > 0) {
-				//The recipeIngredientsList elements must be formatted so that ingredient_id and uom_id have the proper id values, rather than the ingredient and uom objects
-				for(var i = 0; i < $scope.newRecipeIngredients.length; i++)
-				{
-					$scope.newRecipeIngredients[i].uom_id = $scope.newRecipeIngredients[i].uom_id.id;
-					$scope.newRecipeIngredients[i].ingredient_id = $scope.newRecipeIngredients[i].ingredient_id.id;
-				}
-
-				//now assign the newRecipeIngredients array to newRecipe.ingredients
+				//Assign the newRecipeIngredients array to newRecipe.recipe_ingredients
 				$scope.newRecipe.recipe_ingredients = $scope.newRecipeIngredients;
 
-				console.log($scope.newRecipe);
-				$http.post('http://localhost/MenuList/recipes/add.json', $scope.newRecipe).then( function addSuccess(response) {
+				$scope.newRecipe.save($http).then( function(successResponse) {
 					//the response includes the newly created recipe along with the proper id
 					//add the recipe at the beginning of the recipes array
-					recipesController.recipes.unshift(response.data.recipe);
+					recipesController.recipes.unshift(successResponse.data.recipe);
 
 					//update info for pagination and set back to first page
 					recipesController.totalItems += 1;
@@ -173,12 +149,14 @@
 					recipeJustAdded = true;
 
 					//Will clear the forms' fields and clear the list of ingredients so none are displayed
-					$scope.newRecipe = {};
+					$scope.newRecipe = new recipe();
+					recipeCreateForm.$setPristine();
 					$scope.newRecipeIngredient = {};
+					$scope.recipeIngredientCreateForm.$setPristine();
 					$scope.newRecipeIngredients = [];
 				}, 
-				function addFail(response) {
-					console.log(response.status + "\n" + response.statusText);
+				function(failResponse) {
+					console.log("Error saving the recipe: " + failResponse.status + "\n" + failResponse.statusText);
 				});
 			}
 			else {
@@ -195,23 +173,27 @@
 
 		//calls the open function in the global scope, passes the $uibModal dependancy, as well as a true value for animation
 		$scope.open = function(recipeId) {
-			recipeToViewId = recipeId;
 			$uibModal.open({
 				animation: true,
 				templateUrl: 'html/recipes/recipesModalView.html',
 				controller: 'RecipesModalViewInstanceCtrl',
-				size: 'lg', //only way I found to add class to the modal dialog							
+				size: 'lg', //only way I found to add class to the modal dialog	
+				resolve: {
+					recipeId: recipeId
+				}						
 			});
 		};
 	});
 
-	recipesModule.controller('RecipesModalViewInstanceCtrl', function($http, $scope, $uibModalInstance) {
-		var fetchRecipeUrl = "http://localhost/MenuList/recipes/view/" + recipeToViewId + ".json";
-		$scope.imageRequestUrl = 'http://localhost/MenuList/recipes/image/';
-		$scope.recipe = {};
+	recipesModule.controller('RecipesModalViewInstanceCtrl', function($http, $scope, $uibModalInstance, recipeId) {
 
-		$http.get(fetchRecipeUrl).success(function(data) {
-			$scope.recipe = data.recipe;
+		var recipeModel = new recipe();
+
+		recipeModel.fetchRecipe($http, recipeId).then(function(successResponse) {
+			$scope.recipe = successResponse.data.recipe;
+			$scope.imageLink = 'http://localhost/MenuList/recipes/image/' + $scope.recipe.image;
+		}, function(failResponse) {
+			console.log(failResponse.status + "\n" + failResponse.statusText);
 		});
 
 		$scope.close = function() {

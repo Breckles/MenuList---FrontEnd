@@ -12,16 +12,18 @@
 			templateUrl: 'html/ingredients/ingredients.html',
 			controller: ['$http', '$scope', function($http, $scope) {
 				
+				var ingredientModel = new ingredient();
+
 				ingredientsController = this;
 				ingredientsController.ingredients = [];
 
 				ingredientsController.totalItems = 0;
 
-				var fetchIngredientsIndexUrl = 'http://localhost/MenuList/ingredients.json';
-
-				$http.get(fetchIngredientsIndexUrl).success(function(data){
-					ingredientsController.ingredients = data.ingredients;
+				ingredientModel.fetchIndex($http).then(function(successResponse){
+					ingredientsController.ingredients = successResponse.data.ingredients;
 					ingredientsController.totalItems = ingredientsController.ingredients.length;
+				}, function(failResponse) {
+					console.log("Error fetching ingredients index: " + failResponse.status + "\n" + failResponse.statusText);
 				});
 
 

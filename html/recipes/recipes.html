@@ -13,18 +13,21 @@
 	<div class="col-md-4 recipeImage">
 		<img ng-src="{{recipesCtrl.imageRequestUrl}}{{recipe.image}}">
 	</div>
-	<div class="col-md-8">
-		<div class="row recipeInfo">
+	<div class="col-md-6">
+		<!-- <div class="row recipeInfo"> -->
 			Name: {{recipe.name}}<br>
 			Description: {{recipe.description}}<br>
 			Serves: {{recipe.num_served}}<br>
 			Private: {{recipe.private}}<br>
-		</div>
-		<div class="row recipeActions">
-			<div ng-controller="RecipesModalViewCtrl">
-				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="open(recipe.id)">View Recipe</button>	
+		<!-- </div>		 -->
+	</div>
+	<div class="col-md-2 recipeActions">
+		<!-- <div class="row recipeActions"> -->
+			<div class="col-md-12" ng-controller="RecipesModalViewCtrl">
+				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="open(recipe.id)">View Recipe</button><br>
+				<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id)">Delete Recipe</button>	
 			</div>		
-		</div>
+		<!-- </div> -->
 	</div>
 </div>
 <uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>

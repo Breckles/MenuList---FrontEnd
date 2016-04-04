@@ -1,6 +1,8 @@
 <div class="recipes form large-9 medium-8 columns content createForm ng-scope">
-	<form method="post" accept-charset="utf-8" ng-submit="submit()" role="form" class="ng-pristine ng-valid ng-valid-required ng-valid-maxlength ng-valid-min"><div style="display:none;">
-		<input type="hidden" name="_method" value="POST"></div>    
+	<form method="post" accept-charset="utf-8" ng-submit="submit(recipeCreateForm)" role="form" name="recipeCreateForm" class="ng-pristine ng-valid ng-valid-required ng-valid-maxlength ng-valid-min">
+		<div style="display:none;">
+			<input type="hidden" name="_method" value="POST">
+		</div>    
 		<fieldset>
 			<legend>Add Recipe</legend>
 			<div class="form-group">Fields marked with <span style="color:red">*</span> indicate a mandatory field</div>
