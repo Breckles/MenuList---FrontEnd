@@ -1,8 +1,8 @@
 function ingredient() {
-	this.recipe_id = '';
-	this.ingredient_id = '';
-	this.quantity = '';
-	this.uom_id = '';
+	this.name = '';
+	this.category_id = '';
+	this.information = '';
+	this.image = '';
 	this.instructions = '';
 };
 

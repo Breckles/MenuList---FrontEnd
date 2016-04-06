@@ -1,10 +1,17 @@
+<div role="alert" class="alert fade in alert-success alert-dismissable recipeDeletedAlert" ng-show="recipeJustDeleted()">
+	The recipe has been deleted.
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    	<span aria-hidden="true" ng-click="closeDeleteSuccessAlert()">&times;</span>
+  	</button>
+</div>
+
 <div class="row">
 	<div class="col-md-10">
 		<uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>
 	</div>
 	<div class="col-md-2">
-		<div ng-controller="RecipesModalCreateCtrl">
-			<button type="button" class="btn btn-default" ng-click="open()" id="addRecipeBtn">Add Recipe</button>
+		<div ng-controller="RecipesActionsCtrl">
+			<button type="button" class="btn btn-default" ng-click="openRecipeCreateModal()" id="addRecipeBtn">Add Recipe</button>
 		</div>
 	</div>
 </div>
@@ -23,9 +30,10 @@
 	</div>
 	<div class="col-md-2 recipeActions">
 		<!-- <div class="row recipeActions"> -->
-			<div class="col-md-12" ng-controller="RecipesModalViewCtrl">
-				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="open(recipe.id)">View Recipe</button><br>
-				<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id)">Delete Recipe</button>	
+			<div class="col-md-12" ng-controller="RecipesActionsCtrl">
+				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="openRecipeViewModal(recipe.id)">View Recipe</button><br>
+				<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id, $index)">Delete Recipe</button><br>
+				<button type="button" class="btn btn-default editRecipeBtn" id="recipeViewBtn" ng-click="openRecipeEditModal(recipe.id, $index)">Edit Recipe</button>
 			</div>		
 		<!-- </div> -->
 	</div>

@@ -43,8 +43,13 @@
 	text-align: center;
 }
 
-.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus, .viewRecipeBtn,
-.viewRecipeBtn:focus, .deleteRecipeBtn, .deleteRecipeBtn:focus {
+.viewRecipeBtn, .viewRecipeBtn:focus, .deleteRecipeBtn, .deleteRecipeBtn:focus, .editRecipeBtn, .editRecipeBtn:focus {
+	background-color: rgb(51, 122, 183);
+	color: rgb(255, 255, 255);
+	width: 100%;
+}
+
+.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus {
 	background-color: rgb(51, 122, 183);
 	color: rgb(255, 255, 255);
 }
@@ -61,6 +66,24 @@
 /*Make sure line breaks are rendered*/
 .angular-with-newlines {
 	white-space: pre-wrap;
+}
+
+
+.recipeDeletedAlert {
+	position: fixed;
+	top: 1em;
+	left: 1em;
+	color: black;
+	background-color: green;
+	z-index: 99;
+}
+
+.recipeIngredientPills li {
+	display: table-cell;
+}
+
+option.disabled {
+	background-color: grey;
 }
 
 

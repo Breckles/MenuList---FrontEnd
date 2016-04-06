@@ -1,4 +1,5 @@
 function recipe () {
+	this.id = '';
 	this.user_id = 1;//until users are implemented
 	this.description = '';
 	this.instructions = '';
@@ -13,12 +14,19 @@ recipe.prototype.fetchIndex = function(http) {
 	var fetchRecipesIndexUrl = 'http://localhost/MenuList/recipes.json';
 
 	//Returns a Promise
-	return http.get(fetchRecipesIndexUrl);
-	
+	return http.get(fetchRecipesIndexUrl);	
 };
 
-recipe.prototype.fetchRecipe = function(http, recipeId) {
+//Fetches recipe with eager loaded recipeIngredients, recipeIngredient uoms, and recipeIngredient ingredients
+recipe.prototype.fetchForView = function(http, recipeId) {
 	var fetchRecipeUrl = "http://localhost/MenuList/recipes/view/" + recipeId + ".json";
+
+	return http.get(fetchRecipeUrl);
+};
+
+//Fetches recipe only, no eager loading
+recipe.prototype.fetchForEdit = function(http, recipeId) {
+	var fetchRecipeUrl = "http://localhost/MenuList/recipes/edit/" + recipeId + ".json";
 
 	return http.get(fetchRecipeUrl);
 };
@@ -39,9 +47,16 @@ recipe.prototype.save = function(http) {
 	return http.post(saveRecipeUrl, this);	
 };
 
+recipe.prototype.update = function(http, recipe) {
+	var updateUrl = 'http://localhost/MenuList/recipes/edit/' + recipe.id;
 
+	return http.post(updateUrl, recipe);
+};
 
+recipe.prototype.delete = function(http, recipeId) {
+	var deleteRecipeUrl = 'http://localhost/MenuList/recipes/delete/' + recipeId + '.json';
 
-
+	return http.post(deleteRecipeUrl);
+};
 
 

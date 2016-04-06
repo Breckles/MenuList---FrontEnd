@@ -1,7 +1,7 @@
 <div class="row"> 
 	<div class="col-md-6">
 		<div role="alert" class="alert fade in alert-success" ng-show="recipeJustAdded()">The recipe has been saved.</div>
-		<div role="alert" class="alert fade in alert-danger" ng-show="recipeHasNoIngredients()">The recipe must have at least 1 ingredient.</div>
+		<div role="alert" class="alert fade in alert-danger" ng-show="showNoIngredientsAlert()">The recipe must have at least 1 ingredient.</div>
 		<ng-include src="'html/recipes/recipesCreateForm.html'"></ng-include>
 	</div> 
 	<div class="col-md-6"> 
