@@ -48,7 +48,7 @@ recipe.prototype.save = function(http) {
 };
 
 recipe.prototype.update = function(http, recipe) {
-	var updateUrl = 'http://localhost/MenuList/recipes/edit/' + recipe.id;
+	var updateUrl = 'http://localhost/MenuList/recipes/edit/' + recipe.id + '.json';
 
 	return http.post(updateUrl, recipe);
 };

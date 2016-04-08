@@ -239,6 +239,7 @@
 
 		var recipeModel = new recipe();
 		var recipeIngredientModel = new recipeIngredient();
+		$scope.newRecipeIngredient = new recipeIngredient();
 
 		var currentPanel = 0;
 		var currentRecipeIngredientIndex = 0;
@@ -322,12 +323,32 @@
 				console.log(failResponse.status + "\n" + failResponse.statusText);
 			});
 		}
+
+		$scope.addRecipeIngredient = function(recipeIngredientCreateForm) {			
+			//RecipeIngredient needs the recipeId for the recipe being edited
+			$scope.newRecipeIngredient.recipe_id = $scope.recipe.id;
+			console.log($scope.newRecipeIngredient);
+
+			recipeIngredientModel.save($http, $scope.newRecipeIngredient).then(function(successResponse) {
+				$scope.recipeIngredients = successResponse.data.recipeIngredients;
+				$scope.newRecipeIngredient = new recipeIngredient();
+				recipeIngredientCreateForm.$setPristine();
+			}, function(failResponse) {
+				console.log(failResponse.status + "\n" + failResponse.statusText);
+			});
+		};
+
+		$scope.deleteRecipeIngredient = function(recipeIngredientId) {
+			var deleteRecipeIngredient = confirm('Are you sure you want to delete this recipe ingredient?');
+
+			if(deleteRecipeIngredient) {
+				recipeIngredientModel.delete($http, recipeIngredientId).then(function(successResponse) {
+					$scope.recipeIngredients = successResponse.data.recipeIngredients;
+				}, function(failResponse) {
+					console.log(failResponse.status + "\n" + failResponse.statusText);
+				});
+			}
+			
+		};
 	});
-
-
-	
-
-
-
-
 })();

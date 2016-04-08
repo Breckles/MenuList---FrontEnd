@@ -30,3 +30,20 @@ recipeIngredient.prototype.update = function(http, recipeIngredient) {
 	return http.post(updateUrl, recipeIngredient);
 }
 
+recipeIngredient.prototype.save = function(http, recipeIngredient) {
+	var saveUrl = 'http://localhost/MenuList/recipe-ingredients/add.json';
+
+	//At this point, the recipeIngredient's ingredient_id and uom_id refer to actual ingredient and uom objects
+	//We only need the ids, so we alter the values here
+	recipeIngredient.ingredient_id = recipeIngredient.ingredient_id.id;
+	recipeIngredient.uom_id = recipeIngredient.uom_id.id;
+
+	//Return a Promise
+	return http.post(saveUrl, recipeIngredient);
+}
+
+recipeIngredient.prototype.delete = function(http, recipeIngredientId) {
+	var deleteUrl = 'http://localhost/MenuList/recipe-ingredients/delete/' + recipeIngredientId + '.json';
+
+	return http.post(deleteUrl);
+}
