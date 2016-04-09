@@ -5,7 +5,7 @@
 	var requestURL = "";
 
 
-	appModule.controller('appModuleController', ['$http', function($http) {
+	appModule.controller('appModuleController', ['$http','$rootScope', function($http, $rootScope) {
 
 		this.currentPanel = 'recipesPanel';
 
