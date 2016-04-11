@@ -4,9 +4,6 @@
 
 
 	var recipesController;
-	var recipeJustAdded;
-	var recipeJustDeleted;
-	// var recipeHasNoIngredients;
 	var recipeToViewId;
 
 	var alertMessage = '';
@@ -20,7 +17,6 @@
 			restrict: 'E',
 			templateUrl: 'html/recipes/recipes.html',
 			controller: ['$http', '$scope', function($http, $scope) {
-				recipeJustDeleted = false;
 
 				var recipeModel = new recipe();
 				
@@ -44,14 +40,6 @@
 				$scope.setPage = function(pageNo) {
 					recipesController.currentPage = pageNo;
 				};
-
-				$scope.recipeJustDeleted = function() {
-					return recipeJustDeleted;
-				};
-
-				$scope.closeDeleteSuccessAlert = function() {
-					recipeJustDeleted = false;
-				};
 			}],
 			controllerAs: 'recipesCtrl'
 		};
@@ -60,7 +48,7 @@
 
 	///////////////// Controllers ////////////////////////
 
-	recipesModule.controller('RecipesActionsCtrl', function($http, $scope, $uibModal) {
+	recipesModule.controller('RecipesActionsCtrl', ['$http', '$scope', '$uibModal', 'AlertService', function($http, $scope, $uibModal, AlertService) {
 		$scope.openRecipeViewModal = function(recipeId) {
 			$uibModal.open({
 				animation: true,
@@ -74,8 +62,7 @@
 		};
 
 		$scope.openRecipeCreateModal = function() {
-			recipeJustAdded = false;
-			recipeHasNoIngredients = false;
+			$scope.alertService.hideModalAlert();
 
 			$uibModal.open({
 				animation: true,
@@ -86,6 +73,7 @@
 		};
 
 		$scope.openRecipeEditModal = function(recipeId, recipeIndex) {
+			console.log('Recipe ID: ' + recipeId + ' Recipe Index: ' + recipeIndex);
 			$uibModal.open({
 				animation: true,
 				templateUrl: 'html/recipes/recipesModalEdit.html',
@@ -112,21 +100,24 @@
 					//Remove the recipe from the array
 					recipesController.recipes.splice(removeIndex, 1);
 					recipesController.totalItems -= 1;
-					recipeJustDeleted = true;
+					AlertService.showPageAlert('alert-success', 'The recipe has been deleted');
 				}, function(failResponse) {
 					console.log("Error deleting the recipe: " + failResponse.status + "\n" + failResponse.statusText);
 				});
 			}
 		};
-	});
+	}]);
 
 
-	recipesModule.controller('RecipesModalCreateInstanceCtrl', function($http, $scope, $uibModalInstance) {
+	recipesModule.controller('RecipesModalCreateInstanceCtrl', ['$http', '$scope', '$uibModalInstance', 'AlertService',
+	  function($http, $scope, $uibModalInstance, AlertService) {
+
+	  	$scope.alertService = AlertService;
 		
 		var fetchUomsIndexUrl = 'http://localhost/MenuList/uoms.json';
 		var fetchIngredientsIndexUrl = "http://localhost/MenuList/ingredients.json";
 
-		$scope.recipeHasNoIngredients = false;
+		$scope.alertService.hideModalAlert();
 
 		$scope.recipeIngredientCreateForm;
 
@@ -154,16 +145,6 @@
 			$uibModalInstance.dismiss('cancel');
 		};
 
-		$scope.recipeJustAdded = function() {
-			return recipeJustAdded;
-		};
-
-		$scope.showNoIngredientsAlert = function() {
-			console.log($scope.recipeHasNoIngredients);
-			return $scope.recipeHasNoIngredients;
-		};
-
-
 		$scope.addRecipeIngredient = function(recipeIngredientCreateForm) {
 			$scope.newRecipeIngredients.push($scope.newRecipeIngredient);
 			$scope.newRecipeIngredient = {};
@@ -177,7 +158,7 @@
 
 
 		$scope.submit = function(recipeCreateForm) {	
-			$scope.recipeHasNoIngredients = false;
+			$scope.alertService.hideModalAlert();
 
 			if($scope.newRecipeIngredients.length > 0) {
 				//Assign the newRecipeIngredients array to newRecipe.recipe_ingredients
@@ -192,8 +173,7 @@
 					recipesController.totalItems += 1;
 					recipesController.currentPage = 1;
 
-					//will show a flash message to confirm recipe creation
-					recipeJustAdded = true;
+					$scope.alertService.showModalAlert('alert-success', 'The recipe has been created.');
 
 					//Will clear the forms' fields and clear the list of ingredients so none are displayed
 					$scope.newRecipe = new recipe();
@@ -207,11 +187,10 @@
 				});
 			}
 			else {
-				//will make alert show up in form, informing the user that at least one recipeIngredient must be defined for the recipe
-				$scope.recipeHasNoIngredients = true;
+				$scope.alertService.showModalAlert('alert-danger', 'The recipe must have at least 1 ingredient');
 			}
 		};
-	});
+	}]);
 
 
 
@@ -233,9 +212,11 @@
 
 
 
-	recipesModule.controller('RecipesModalEditInstanceCtrl', function($http, $scope, $uibModalInstance, recipeId, recipeIndex) {
-		
+	recipesModule.controller('RecipesModalEditInstanceCtrl', ['$http', '$scope', '$uibModalInstance', 'AlertService', 'recipeId', 'recipeIndex',
+	  function($http, $scope, $uibModalInstance, AlertService, recipeId, recipeIndex) {
 		//////////// declarations /////////////
+		$scope.alertService = AlertService;
+		$scope.alertService.hideModalAlert();
 
 		var recipeModel = new recipe();
 		var recipeIngredientModel = new recipeIngredient();
@@ -243,8 +224,6 @@
 
 		var currentPanel = 0;
 		var currentRecipeIngredientIndex = 0;
-		var recipeUpdated = false;
-		var recipeIngredientUpdated = false;
 
 		///////////// fetching ///////////////
 
@@ -278,20 +257,13 @@
 			$uibModalInstance.dismiss('cancel');
 		};
 
-		$scope.recipeJustEdited = function() {
-			return recipeUpdated;
-		};
-
-		$scope.recipeIngredientJustEdited = function() {
-			return recipeIngredientUpdated;
-		};
-
 		$scope.isPanelSelected = function(panel) {
+			console.log(panel);
 			return panel == currentPanel;
 		};
 
 		$scope.selectPanel = function(panel) {
-			recipeIngredientUpdated = false;
+			$scope.alertService.hideModalAlert();
 			currentPanel = panel;
 			currentRecipeIngredientIndex = panel;
 		};
@@ -300,11 +272,11 @@
 			return currentRecipeIngredientIndex == recipeIngredientIndex;
 		}
 
-		$scope.updateRecipe = function() {			
-			recipeUpdated = false;
+		$scope.updateRecipe = function() {	
+			$scope.alertService.hideModalAlert();
 
 			recipeModel.update($http, $scope.recipe).then(function(successResponse) {
-				recipeUpdated = true;
+				$scope.alertService.showModalAlert('alert-success', 'The recipe has been updated');
 				recipesController.recipes[recipeIndex] = $scope.recipe;
 			}, function(failResponse) {
 				console.log(failResponse.status + "\n" + failResponse.statusText);
@@ -314,17 +286,19 @@
 		$scope.updateRecipeIngredient = function(recipeIngredientIndex) {
 			console.log($scope.recipeIngredients[recipeIngredientIndex]);
 
-			recipeIngredientUpdated = false;
+			$scope.alertService.hideModalAlert();
 
 			recipeIngredientModel.update($http, $scope.recipeIngredients[recipeIngredientIndex]).then(function(successResponse) {
-				recipeIngredientUpdated = true;
+				$scope.alertService.showModalAlert('alert-success', 'The recipe ingredient has been updated.');
 				console.log("ri saved");
 			}, function(failResponse) {
 				console.log(failResponse.status + "\n" + failResponse.statusText);
 			});
 		}
 
-		$scope.addRecipeIngredient = function(recipeIngredientCreateForm) {			
+		$scope.addRecipeIngredient = function(recipeIngredientCreateForm) {		
+			$scope.alertService.hideModalAlert();
+
 			//RecipeIngredient needs the recipeId for the recipe being edited
 			$scope.newRecipeIngredient.recipe_id = $scope.recipe.id;
 			console.log($scope.newRecipeIngredient);
@@ -333,22 +307,33 @@
 				$scope.recipeIngredients = successResponse.data.recipeIngredients;
 				$scope.newRecipeIngredient = new recipeIngredient();
 				recipeIngredientCreateForm.$setPristine();
+				$scope.alertService.showModalAlert('alert-success', 'The recipe ingredient has been added');
 			}, function(failResponse) {
 				console.log(failResponse.status + "\n" + failResponse.statusText);
 			});
 		};
 
 		$scope.deleteRecipeIngredient = function(recipeIngredientId) {
-			var deleteRecipeIngredient = confirm('Are you sure you want to delete this recipe ingredient?');
 
-			if(deleteRecipeIngredient) {
-				recipeIngredientModel.delete($http, recipeIngredientId).then(function(successResponse) {
-					$scope.recipeIngredients = successResponse.data.recipeIngredients;
-				}, function(failResponse) {
-					console.log(failResponse.status + "\n" + failResponse.statusText);
-				});
+			if($scope.recipeIngredients.length > 1) {
+				var deleteRecipeIngredient = confirm('Are you sure you want to delete this recipe ingredient?');
+
+				if(deleteRecipeIngredient) {
+					recipeIngredientModel.delete($http, recipeIngredientId).then(function(successResponse) {
+						currentPanel = 0;
+						currentRecipeIngredientIndex = 0;
+						$scope.recipeIngredients = successResponse.data.recipeIngredients;					
+						$scope.alertService.showModalAlert('alert-success', 'The recipe Ingredient has been deleted.');
+					}, function(failResponse) {
+						console.log(failResponse.status + "\n" + failResponse.statusText);
+					});
+				}
+			}
+			else {
+				//A recipe with no ingredients makes no sense, so we warn the user
+				$scope.alertService.showModalAlert('alert-danger', 'A recipe must have at least 1 ingredient.');
 			}
 			
 		};
-	});
+	}]);
 })();

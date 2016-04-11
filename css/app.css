@@ -14,7 +14,7 @@
 }
 
 
-#addRecipeBtn{
+#createRecipeBtn{
 	float: right;
 	margin-bottom: 1em;
 	margin-right: 0em;
@@ -86,6 +86,31 @@ option.disabled {
 	background-color: grey;
 }
 
+#pageAlert, #modalAlert {
+	position: fixed;
+	width: 20%;
+	top: 2%;
+	left: 40%;
+	color: black;
+	z-index: 99;	
+}
+
+.alert-success{	
+	background-color: rgb(102,205,170);
+}
+
+.alert-danger{
+	background-color: rgb(255,68,68);
+}
+
+.modal.in .modal-dialog {
+	/* Fixes a bug in chrome.
+       When some element inside the modal has position:fixed, the transforms have a weird effect of miscalculating the element's position
+    */
+	 -webkit-transform: none;
+	 -ms-transform: none; // IE9 only
+	 transform: none;
+}
 
 
 /************** Form Validation **************/

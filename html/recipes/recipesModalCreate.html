@@ -1,7 +1,18 @@
+<div class="row" ng-show="alertService.displayModalAlert">
+	<div class="col-md-5"></div>
+	<div class="col-md-2">
+		<div role="alert" class="alert fade in alert-dismissable {{alertService.modalAlertType}}" id="modalAlert">
+			{{alertService.modalAlertMessage}}
+			<button type="button" class="close" ng-click="alertService.hideModalAlert()">
+		    	&times;
+		  	</button>
+		</div>
+	</div>
+	<div class="col-md-5"></div>
+</div>
+
 <div class="row"> 
 	<div class="col-md-6">
-		<div role="alert" class="alert fade in alert-success" ng-show="recipeJustAdded()">The recipe has been saved.</div>
-		<div role="alert" class="alert fade in alert-danger" ng-show="showNoIngredientsAlert()">The recipe must have at least 1 ingredient.</div>
 		<ng-include src="'html/recipes/recipesCreateForm.html'"></ng-include>
 	</div> 
 	<div class="col-md-6"> 

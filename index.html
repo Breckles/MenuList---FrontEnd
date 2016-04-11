@@ -18,6 +18,21 @@
 	<body ng-controller="appModuleController as app">
 
 		<div class="container-fluid">
+
+			<div class="row" ng-show="alertService.displayPageAlert">
+				<div class="col-md-5"></div>
+				<div class="col-md-2">
+					<div role="alert" class="alert fade in alert-dismissable {{alertService.pageAlertType}}" id="pageAlert">
+						{{alertService.pageAlertMessage}}
+						<button type="button" class="close" ng-click="alertService.hidePageAlert()">
+					    	&times;
+					  	</button>
+					</div>
+				</div>
+				<div class="col-md-5"></div>
+			</div>
+			
+
 			<div class="row">
 				<div class="col-md-1" id="logo">
 					<h2>Menu<br>List</h2>
@@ -77,67 +92,7 @@
 						<li>Something Else</li>
 					</ul>
 				</div>
-			</div>
-		
-
-
-<!-- <div class="col-md-4">
-					<ul>
-						<li>Something</li>
-						<li>Something Else</li>
-					</ul>
-				</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-			<div class="panel-selector">
-				<ul class="nav nav-pills">
-					<li ng-class="{active:app.isPanelSelected('mealSchedulePanel')}">
-						<a href ng-click="app.selectPanel('mealSchedulePanel')">Meal Schedule</a>
-					</li>
-					<li ng-class="{active:app.isPanelSelected('recipesPanel')}">
-						<a href ng-click="app.selectPanel('recipesPanel')">Recipes</a>
-					</li>
-					<li ng-class="{active:app.isPanelSelected('ingredientsPanel')}">
-						<a href ng-click="app.selectPanel('ingredientsPanel')">Ingredients</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="panels">
-				<div class="panel" ng-show="app.isPanelSelected('mealSchedulePanel')">
-					<div class="panel-body">
-						Meal Schedule
-					</div>
-				</div>
-
-				<div class="panel" ng-show="app.isPanelSelected('recipesPanel')">
-					<div class="panel-body">
-						<recipes></recipes>
-					</div>
-				</div>
-
-				<div class="panel" ng-show="app.isPanelSelected('ingredientsPanel')">
-					<div class="panel-body">
-						Ingredients	
-					</div>							
-				</div>	
-			</div> -->		
+			</div>	
 		</div>
-
-
-
 	</body>
 </html>

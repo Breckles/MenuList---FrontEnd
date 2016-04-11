@@ -5,8 +5,6 @@
 	</li>	
 </ul>
 
-<div role="alert" class="alert fade in alert-success" ng-show="recipeIngredientJustEdited()">The ingredient has been updated.</div>
-
 <div class="recipeIngredients form large-9 medium-8 columns content ng-scope" ng-repeat="recipeIngredient in recipeIngredients" ng-show="isCurrentRecipeIngredient($index)">
 	<form method="post" accept-charset="utf-8" ng-submit="updateRecipeIngredient($index)" role="form" name="recipeIngredientCreateForm" class="ng-pristine ng-valid ng-valid-min ng-valid-required">		
 		<div style="display:none;"><input type="hidden" name="_method" value="POST"></div>    
