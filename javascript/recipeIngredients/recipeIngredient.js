@@ -16,19 +16,14 @@ recipeIngredient.prototype.fetchForEdit = function(http, recipeId) {
 	
 	//Returns a Promise
 	return http.get(fetchForEditUrl);
-}
+};
 
 recipeIngredient.prototype.update = function(http, recipeIngredient) {
 	var updateUrl = 'http://localhost/MenuList/recipe-ingredients/edit/' + recipeIngredient.id + '.json';
 
-	//if the uom was changed, then the uom_id must reflect the new uom's id
-	recipeIngredient.uom_id =  recipeIngredient.uom.id;
-
-	console.log(recipeIngredient);
-
 	//Returns a promise
 	return http.post(updateUrl, recipeIngredient);
-}
+};
 
 recipeIngredient.prototype.save = function(http, recipeIngredient) {
 	var saveUrl = 'http://localhost/MenuList/recipe-ingredients/add.json';
@@ -40,10 +35,10 @@ recipeIngredient.prototype.save = function(http, recipeIngredient) {
 
 	//Return a Promise
 	return http.post(saveUrl, recipeIngredient);
-}
+};
 
 recipeIngredient.prototype.delete = function(http, recipeIngredientId) {
 	var deleteUrl = 'http://localhost/MenuList/recipe-ingredients/delete/' + recipeIngredientId + '.json';
 
 	return http.post(deleteUrl);
-}
+};

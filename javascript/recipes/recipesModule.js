@@ -216,14 +216,13 @@
 	  function($http, $scope, $uibModalInstance, AlertService, recipeId, recipeIndex) {
 		//////////// declarations /////////////
 		$scope.alertService = AlertService;
-		$scope.alertService.hideModalAlert();
+		$scope.alertService.hideModalAlert();//Make sure no previous alerts show up
 
 		var recipeModel = new recipe();
 		var recipeIngredientModel = new recipeIngredient();
 		$scope.newRecipeIngredient = new recipeIngredient();
 
 		var currentPanel = 0;
-		var currentRecipeIngredientIndex = 0;
 
 		///////////// fetching ///////////////
 
@@ -236,6 +235,8 @@
 		recipeIngredientModel.fetchForEdit($http, recipeId).then(function(successResponse) {
 			console.log(successResponse.data.recipeIngredients);
 			$scope.recipeIngredients = successResponse.data.recipeIngredients;
+
+			$scope.currentRecipeIngredient = $scope.recipeIngredients[0];
 		}, function(failResponse) {
 			console.log(failResponse.status + "\n" + failResponse.statusText);
 		});
@@ -258,19 +259,17 @@
 		};
 
 		$scope.isPanelSelected = function(panel) {
-			console.log(panel);
 			return panel == currentPanel;
 		};
 
 		$scope.selectPanel = function(panel) {
 			$scope.alertService.hideModalAlert();
 			currentPanel = panel;
-			currentRecipeIngredientIndex = panel;
+
+			$scope.currentRecipeIngredient = $scope.recipeIngredients[panel];
 		};
 
-		$scope.isCurrentRecipeIngredient = function(recipeIngredientIndex) {
-			return currentRecipeIngredientIndex == recipeIngredientIndex;
-		}
+		
 
 		$scope.updateRecipe = function() {	
 			$scope.alertService.hideModalAlert();
@@ -283,14 +282,14 @@
 			});
 		};
 
-		$scope.updateRecipeIngredient = function(recipeIngredientIndex) {
-			console.log($scope.recipeIngredients[recipeIngredientIndex]);
-
+		$scope.updateRecipeIngredient = function() {
 			$scope.alertService.hideModalAlert();
 
-			recipeIngredientModel.update($http, $scope.recipeIngredients[recipeIngredientIndex]).then(function(successResponse) {
+			//If the recipeIngredient.uom was changed, the recipeIngredient.uom_id must reflect the new uom
+			$scope.currentRecipeIngredient.uom_id =  $scope.currentRecipeIngredient.uom.id;
+
+			recipeIngredientModel.update($http, $scope.currentRecipeIngredient).then(function(successResponse) {
 				$scope.alertService.showModalAlert('alert-success', 'The recipe ingredient has been updated.');
-				console.log("ri saved");
 			}, function(failResponse) {
 				console.log(failResponse.status + "\n" + failResponse.statusText);
 			});
@@ -321,7 +320,6 @@
 				if(deleteRecipeIngredient) {
 					recipeIngredientModel.delete($http, recipeIngredientId).then(function(successResponse) {
 						currentPanel = 0;
-						currentRecipeIngredientIndex = 0;
 						$scope.recipeIngredients = successResponse.data.recipeIngredients;					
 						$scope.alertService.showModalAlert('alert-success', 'The recipe Ingredient has been deleted.');
 					}, function(failResponse) {
