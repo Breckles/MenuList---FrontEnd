@@ -10,6 +10,7 @@ function recipe () {
 
 //Fetches a list of all existing recipes in the database
 //@http: The AngularJS $http service used to make the request
+//@return: A Javascript Promise
 recipe.prototype.fetchIndex = function(http) {
 	var fetchRecipesIndexUrl = 'http://localhost/MenuList/recipes.json';
 

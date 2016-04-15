@@ -9,7 +9,7 @@
 
 	appModule.controller('appModuleController', ['$http', '$scope', 'AlertService', function($http, $scope, AlertService) {
 		$scope.alertService = AlertService;
-		this.currentPanel = 'recipesPanel';		
+		this.currentPanel = 'ingredientsPanel';		
 
 		this.isPanelSelected = function(panel) {
 			return this.currentPanel === panel;
@@ -18,9 +18,6 @@
 		this.selectPanel = function(newCurrentPanel) {
 			this.currentPanel = newCurrentPanel;
 		};
-
-		
-
 	}]);
 
 	appModule.service('AlertService', function() {

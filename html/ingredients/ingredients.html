@@ -3,9 +3,9 @@
 		<uib-pagination total-items="ingredientsCtrl.totalItems" ng-model="ingredientsCtrl.currentPage" class="pagination-md" items-per-page="ingredientsCtrl.itemsPerPage"></uib-pagination>
 	</div>
 	<div class="col-md-2">
-		<!-- <div ng-controller="IngredientsModalCreateCtrl">
-			<button type="button" class="btn btn-default" ng-click="open()" id="addIngredientBtn">Add Ingredient</button>
-		</div> -->
+		<div ng-controller="IngredientsActionsCtrl">
+			<button type="button" class="btn btn-default" ng-click="openIngredientCreateModal()" id="createIngredientBtn">Create Ingredient</button>
+		</div>
 	</div>
 </div>
 
@@ -16,7 +16,7 @@
 	<div class="col-md-8">
 		<div class="row ingredientInfo">
 			Name: {{ingredient.name}}<br>
-			Category: {{ingredient.category.category}}<br>
+			Category: {{ingredient.category.name}}<br>
 			Information: {{ingredient.information}}<br>
 		</div>
 		<div class="row ingredientActions">
