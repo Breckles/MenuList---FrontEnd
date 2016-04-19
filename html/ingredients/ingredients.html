@@ -13,17 +13,17 @@
 	<div class="col-md-4 ingredientImage">
 		<img ng-src="{{ingredientsCtrl.imageRequestUrl}}{{ingredient.image}}">
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-5">
 		<div class="row ingredientInfo">
 			Name: {{ingredient.name}}<br>
 			Category: {{ingredient.category.name}}<br>
 			Information: {{ingredient.information}}<br>
-		</div>
-		<div class="row ingredientActions">
-			<!-- <div ng-controller="IngredientsModalViewCtrl">
-				<button type="button" class="btn btn-default viewIngredientBtn" id="ingredientViewBtn" ng-click="open(ingredient.id)">View Ingredient</button>	
-			</div>	 -->	
-		</div>
+		</div>		
+	</div>
+	<div class="col-md-3 ingredientActions">
+		<div class="col-md-12" ng-controller="IngredientsActionsCtrl">
+			<button type="button" class="btn btn-default deleteIngredientBtn" id="deleteIngredientBtn" ng-click="deleteIngredient(ingredient.id, $index)">Delete Ingredient</button>	
+		</div>		
 	</div>
 </div>
 <uib-pagination total-items="ingredientsCtrl.totalItems" ng-model="ingredientsCtrl.currentPage" class="pagination-md" items-per-page="ingredientsCtrl.itemsPerPage"></uib-pagination>

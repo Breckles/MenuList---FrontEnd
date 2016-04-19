@@ -43,18 +43,21 @@
 	text-align: center;
 }
 
-.viewRecipeBtn, .viewRecipeBtn:focus, .deleteRecipeBtn, .deleteRecipeBtn:focus, .editRecipeBtn, .editRecipeBtn:focus {
+.viewRecipeBtn, .viewRecipeBtn:focus, .deleteRecipeBtn, .deleteRecipeBtn:focus, .editRecipeBtn, .editRecipeBtn:focus, 
+  .deleteIngredientBtn, .deleteIngredientBtn:focus {
 	background-color: rgb(51, 122, 183);
 	color: rgb(255, 255, 255);
-	width: 100%;
+	float: right;
+	width: 70%;
 }
 
-.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus {
+.saveRecipeButton, .saveRecipeButton:focus, .addRecipeIngredientButton, .addRecipeIngredientButton:focus,
+  .updateRecipeIngredientButton, .updateRecipeIngredientButton:focus, .deleteRecipeIngredientButton, .deleteRecipeIngredientButton:focus {
 	background-color: rgb(51, 122, 183);
 	color: rgb(255, 255, 255);
 }
 
-.recipeActions {
+.recipeActions, .ingredientActions {
 	text-align: center;
 }
 

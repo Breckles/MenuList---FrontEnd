@@ -26,10 +26,10 @@
 				<textarea name="instructions" ng-model="currentRecipeIngredient.instructions" id="instructions" class="form-control" rows="5"></textarea>
 			</div>    
 		</fieldset>
-		<button type="submit" class="btn addRecipeIngredientButton">
+		<button type="submit" class="btn updateRecipeIngredientButton">
 			Update Recipe Ingredient
 		</button>
-		<button type="button" class="btn deleteRecipeIngredientButton" ng-click="deleteRecipeIngredient()">
+		<button type="button" class="btn deleteRecipeIngredientButton" ng-click="deleteRecipeIngredient(currentRecipeIngredient.id)">
 			Delete Recipe Ingredient
 		</button>
 	</form>

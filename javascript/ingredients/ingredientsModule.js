@@ -1,6 +1,6 @@
 (function(){
 
-	var ingredientsModule = angular.module('ingredientsModule', []);
+	var ingredientsModule = angular.module('IngredientsModule', []);
 
 	var ingredientsController;
 
@@ -12,7 +12,7 @@
 			templateUrl: 'html/ingredients/ingredients.html',
 			controller: ['$http', '$scope', function($http, $scope) {
 				
-				var ingredientModel = new ingredient();
+				var ingredientsInterface = new IngredientsInterface();
 
 				ingredientsController = this;
 				ingredientsController.ingredients = [];
@@ -22,7 +22,7 @@
 				ingredientsController.currentPage = 1;
 				ingredientsController.totalItems = 0;
 
-				ingredientModel.fetchIndex($http).then(function(successResponse){
+				ingredientsInterface.fetchIndex($http).then(function(successResponse){
 					ingredientsController.ingredients = successResponse.data.ingredients;
 					ingredientsController.totalItems = ingredientsController.ingredients.length;
 				}, function(failResponse) {
@@ -58,8 +58,33 @@
 				animation: true,
 				templateUrl: 'html/ingredients/ingredientsModalCreate.html',
 				controller: 'IngredientModalCreateInstanceCtrl',
-				size: 'lg ingredientCreateModalDialog', //only way I found to add class to the modal dialog		
+				size: 'sm ingredientCreateModalDialog', //only way I found to add class to the modal dialog		
 			});
+	  	};
+
+	  	$scope.deleteIngredient = function(ingredientId, index) {
+	  		//Hide any previous alerts
+	  		$scope.alertService.hidePageAlert();
+
+	  		var deleteIngredient = confirm('Are you sure you want to delete this ingredient?');
+
+	  		if(deleteIngredient) {
+	  			//Need to make sure the index takes pagination into account
+	  			var removeIndex = index + ((ingredientsController.currentPage - 1) * ingredientsController.itemsPerPage);
+
+	  			var ingredientsInterface = new IngredientsInterface();
+	  			ingredientsInterface.delete($http, ingredientId).then(function(successResponse) {
+	  				//Remove the ingredient from the array
+	  				ingredientsController.ingredients.splice(removeIndex, 1);
+
+	  				//Update pagination info
+	  				ingredientsController.totalItems -= 1;
+
+	  				$scope.alertService.showPageAlert('alert-success', 'The ingredient has been deleted');
+	  			}, function(failResponse) {
+	  				console.log(failResponse.status + "\n" + failResponse.statusText);
+	  			});
+	  		}
 	  	};
 	}]);
 
@@ -69,7 +94,8 @@
 	  	//must declare scope variable for AlertService in order to expose its properties to the view
 	  	$scope.alertService = AlertService;
 
-	  	$scope.newIngredient = new ingredient();
+	  	$scope.ingredientsInterface = new IngredientsInterface();
+	  	$scope.newIngredient = new Ingredient();
 	  	$scope.categoriesList = [];
 
 	  	//fetch the categories
@@ -89,7 +115,7 @@
 			//hide any previous modal alerts
 			$scope.alertService.hideModalAlert();
 
-			$scope.newIngredient.create($http).then(function(successResponse) {
+			$scope.ingredientsInterface.create($http, $scope.newIngredient).then(function(successResponse) {
 				//the response includes the newly created ingredient along with the proper id
 				//add the ingredient at the beginning of the recipes array
 				ingredientsController.ingredients.unshift(successResponse.data.ingredient);
@@ -101,7 +127,7 @@
 				$scope.alertService.showModalAlert('alert-success', 'The recipe has been created.');
 
 				//Will clear the forms' fields and clear the list of ingredients so none are displayed
-				$scope.newIngredient = new ingredient();
+				$scope.newIngredient = new Ingredient();
 				ingredientCreateForm.$setPristine();
 				$scope.alertService.showModalAlert('alert-success', 'The ingredient has been created.');
 			}, function(failResponse) {

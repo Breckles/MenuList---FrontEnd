@@ -1,6 +1,6 @@
 (function(){
 
-	var recipesModule = angular.module('recipesModule', []);
+	var recipesModule = angular.module('RecipesModule', []);
 
 
 	var recipesController;
@@ -18,13 +18,13 @@
 			templateUrl: 'html/recipes/recipes.html',
 			controller: ['$http', '$scope', function($http, $scope) {
 
-				var recipeModel = new recipe();
+				var recipesInterface = new RecipesInterface();
 				
 				recipesController = this;
 				recipesController.recipes = [];
 				recipesController.totalItems = 0;
 
-				recipeModel.fetchIndex($http).then(function(successResponse) {
+				recipesInterface.fetchIndex($http).then(function(successResponse) {
 					recipesController.recipes = successResponse.data.recipes;
 					recipesController.totalItems = recipesController.recipes.length;
 				}, function(failResponse) {
@@ -88,17 +88,22 @@
 		};
 
 		$scope.deleteRecipe = function(recipeId, index) {
+			//Hide any previous alerts
+			$scope.alertService.hidePageAlert();
+
 			var deleteRecipe = confirm('Are you sure you want to delete this recipe?');
 
 			if(deleteRecipe) {
 				//Pagination messes with indexes, we need to account for this
 				var removeIndex = index + ((recipesController.currentPage - 1) * recipesController.itemsPerPage);
 
-				var recipeModel = new recipe();
-				recipeModel.delete($http, recipeId).then(function(successResponse) {
+				var recipesInterface = new RecipesInterface();
+				recipesInterface.delete($http, recipeId).then(function(successResponse) {
 					console.log(index);
 					//Remove the recipe from the array
 					recipesController.recipes.splice(removeIndex, 1);
+
+					//Update pagination info
 					recipesController.totalItems -= 1;
 					AlertService.showPageAlert('alert-success', 'The recipe has been deleted');
 				}, function(failResponse) {
@@ -114,8 +119,8 @@
 
 	  	$scope.alertService = AlertService;
 		
-		var fetchUomsIndexUrl = 'http://localhost/MenuList/uoms.json';
-		var fetchIngredientsIndexUrl = "http://localhost/MenuList/ingredients.json";
+		var uomsInterface = new UomsInterface();
+		var ingredientsInterface = new IngredientsInterface();
 
 		$scope.alertService.hideModalAlert();
 
@@ -125,20 +130,25 @@
 		$scope.uomsList = [];
 		$scope.ingredientsList = [];
 
-		$scope.newRecipe = new recipe();
+		$scope.newRecipe = new Recipe();
+		$scope.recipesInterface = new RecipesInterface();
 
-		$scope.newRecipeIngredient = new recipeIngredient();
+		$scope.newRecipeIngredient = new RecipeIngredient();
 
 		$scope.newRecipeIngredients = [];
 
 		//fetch all the available uoms
-		$http.get(fetchUomsIndexUrl).success(function(data) {
-			$scope.uomsList = data.uoms;
+		uomsInterface.fetchIndex($http).then(function(successResponse) {
+			$scope.uomsList = successResponse.data.uoms;
+		}, function(failResponse) {
+			console.log("Error fetching Uoms Index\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 		});
 
 		//fetch all available ingredients
-		$http.get(fetchIngredientsIndexUrl).success(function(data) {
-			$scope.ingredientsList = data.ingredients;
+		ingredientsInterface.fetchIndex($http).then(function(successResponse) {
+			$scope.ingredientsList = successResponse.data.ingredients;
+		}, function(failResponse) {
+			console.log("Error fetching Ingredients Index\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 		});
 
 		$scope.cancel = function() {
@@ -164,7 +174,7 @@
 				//Assign the newRecipeIngredients array to newRecipe.recipe_ingredients
 				$scope.newRecipe.recipe_ingredients = $scope.newRecipeIngredients;
 
-				$scope.newRecipe.save($http).then( function(successResponse) {
+				$scope.recipesInterface.create($http, $scope.newRecipe).then( function(successResponse) {
 					//the response includes the newly created recipe along with the proper id
 					//add the recipe at the beginning of the recipes array
 					recipesController.recipes.unshift(successResponse.data.recipe);
@@ -176,7 +186,7 @@
 					$scope.alertService.showModalAlert('alert-success', 'The recipe has been created.');
 
 					//Will clear the forms' fields and clear the list of ingredients so none are displayed
-					$scope.newRecipe = new recipe();
+					$scope.newRecipe = new Recipe();
 					recipeCreateForm.$setPristine();
 					$scope.newRecipeIngredient = {};
 					$scope.recipeIngredientCreateForm.$setPristine();
@@ -196,9 +206,9 @@
 
 	recipesModule.controller('RecipesModalViewInstanceCtrl', function($http, $scope, $uibModalInstance, recipeId) {
 
-		var recipeModel = new recipe();
+		var recipesInterface = new RecipesInterface();
 
-		recipeModel.fetchForView($http, recipeId).then(function(successResponse) {
+		recipesInterface.fetchForView($http, recipeId).then(function(successResponse) {
 			$scope.recipe = successResponse.data.recipe;
 			$scope.imageLink = 'http://localhost/MenuList/recipes/image/' + $scope.recipe.image;
 		}, function(failResponse) {
@@ -218,37 +228,44 @@
 		$scope.alertService = AlertService;
 		$scope.alertService.hideModalAlert();//Make sure no previous alerts show up
 
-		var recipeModel = new recipe();
-		var recipeIngredientModel = new recipeIngredient();
-		$scope.newRecipeIngredient = new recipeIngredient();
+		var recipesInterface = new RecipesInterface();
+		var recipeIngredientsInterface = new RecipeIngredientsInterface();
+		var uomsInterface = new UomsInterface();
+		var ingredientsInterface = new IngredientsInterface();
+
+		$scope.newRecipeIngredient = new RecipeIngredient();
 
 		var currentPanel = 0;
 
 		///////////// fetching ///////////////
 
-		recipeModel.fetchForEdit($http, recipeId).then(function(successResponse) {
+		recipesInterface.fetchForEdit($http, recipeId).then(function(successResponse) {
 			$scope.recipe = successResponse.data.recipe;
 		}, function(failResponse) {
-			console.log(failResponse.status + "\n" + failResponse.statusText);
+			console.log("Error fetching Recipe for Edit\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 		});
 
-		recipeIngredientModel.fetchForEdit($http, recipeId).then(function(successResponse) {
+		recipeIngredientsInterface.fetchForEdit($http, recipeId).then(function(successResponse) {
 			console.log(successResponse.data.recipeIngredients);
 			$scope.recipeIngredients = successResponse.data.recipeIngredients;
 
 			$scope.currentRecipeIngredient = $scope.recipeIngredients[0];
 		}, function(failResponse) {
-			console.log(failResponse.status + "\n" + failResponse.statusText);
-		});
-
-		//fetch all available ingredients
-		$http.get("http://localhost/MenuList/ingredients.json").success(function(data) {
-			$scope.ingredientsList = data.ingredients;
+			console.log("Error fetching RecipeIngredients for Edit\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 		});
 
 		//fetch all the available uoms
-		$http.get('http://localhost/MenuList/uoms.json').success(function(data) {
-			$scope.uomsList = data.uoms;
+		uomsInterface.fetchIndex($http).then(function(successResponse) {
+			$scope.uomsList = successResponse.data.uoms;
+		}, function(failResponse) {
+			console.log("Error fetching Uoms Index\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
+		});
+
+		//fetch all available ingredients
+		ingredientsInterface.fetchIndex($http).then(function(successResponse) {
+			$scope.ingredientsList = successResponse.data.ingredients;
+		}, function(failResponse) {
+			console.log("Error fetching Ingredients Index\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 		});
 
 
@@ -274,7 +291,7 @@
 		$scope.updateRecipe = function() {	
 			$scope.alertService.hideModalAlert();
 
-			recipeModel.update($http, $scope.recipe).then(function(successResponse) {
+			recipesInterface.update($http, $scope.recipe).then(function(successResponse) {
 				$scope.alertService.showModalAlert('alert-success', 'The recipe has been updated');
 				recipesController.recipes[recipeIndex] = $scope.recipe;
 			}, function(failResponse) {
@@ -288,7 +305,7 @@
 			//If the recipeIngredient.uom was changed, the recipeIngredient.uom_id must reflect the new uom
 			$scope.currentRecipeIngredient.uom_id =  $scope.currentRecipeIngredient.uom.id;
 
-			recipeIngredientModel.update($http, $scope.currentRecipeIngredient).then(function(successResponse) {
+			recipeIngredientsInterface.update($http, $scope.currentRecipeIngredient).then(function(successResponse) {
 				$scope.alertService.showModalAlert('alert-success', 'The recipe ingredient has been updated.');
 			}, function(failResponse) {
 				console.log(failResponse.status + "\n" + failResponse.statusText);
@@ -302,9 +319,9 @@
 			$scope.newRecipeIngredient.recipe_id = $scope.recipe.id;
 			console.log($scope.newRecipeIngredient);
 
-			recipeIngredientModel.save($http, $scope.newRecipeIngredient).then(function(successResponse) {
+			recipeIngredientsInterface.create($http, $scope.newRecipeIngredient).then(function(successResponse) {
 				$scope.recipeIngredients = successResponse.data.recipeIngredients;
-				$scope.newRecipeIngredient = new recipeIngredient();
+				$scope.newRecipeIngredient = new RecipeIngredient();
 				recipeIngredientCreateForm.$setPristine();
 				$scope.alertService.showModalAlert('alert-success', 'The recipe ingredient has been added');
 			}, function(failResponse) {
@@ -318,12 +335,12 @@
 				var deleteRecipeIngredient = confirm('Are you sure you want to delete this recipe ingredient?');
 
 				if(deleteRecipeIngredient) {
-					recipeIngredientModel.delete($http, recipeIngredientId).then(function(successResponse) {
+					recipeIngredientsInterface.delete($http, recipeIngredientId).then(function(successResponse) {
 						currentPanel = 0;
 						$scope.recipeIngredients = successResponse.data.recipeIngredients;					
 						$scope.alertService.showModalAlert('alert-success', 'The recipe Ingredient has been deleted.');
 					}, function(failResponse) {
-						console.log(failResponse.status + "\n" + failResponse.statusText);
+						console.log("Error deleting RecipeIngrdeient\nStatus: " + failResponse.status + "\nStatus Text: " + failResponse.statusText);
 					});
 				}
 			}

@@ -1,15 +1,11 @@
 (function(){
 
-	var appModule = angular.module('appModule', ['ui.bootstrap', 'recipesModule', 'ingredientsModule']);
-
-	var requestURL = "";
+	var appModule = angular.module('AppModule', ['ui.bootstrap', 'RecipesModule', 'IngredientsModule', 'WeeklyMenusModule']);
 
 
-
-
-	appModule.controller('appModuleController', ['$http', '$scope', 'AlertService', function($http, $scope, AlertService) {
+	appModule.controller('AppModuleController', ['$http', '$scope', 'AlertService', function($http, $scope, AlertService) {
 		$scope.alertService = AlertService;
-		this.currentPanel = 'ingredientsPanel';		
+		this.currentPanel = 'recipesPanel';		
 
 		this.isPanelSelected = function(panel) {
 			return this.currentPanel === panel;

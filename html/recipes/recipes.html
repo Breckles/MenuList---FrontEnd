@@ -13,22 +13,18 @@
 	<div class="col-md-4 recipeImage">
 		<img ng-src="{{recipesCtrl.imageRequestUrl}}{{recipe.image}}">
 	</div>
-	<div class="col-md-6">
-		<!-- <div class="row recipeInfo"> -->
-			Name: {{recipe.name}}<br>
-			Description: {{recipe.description}}<br>
-			Serves: {{recipe.num_served}}<br>
-			Private: {{recipe.private}}<br>
-		<!-- </div>		 -->
+	<div class="col-md-5">
+		Name: {{recipe.name}}<br>
+		Description: {{recipe.description}}<br>
+		Serves: {{recipe.num_served}}<br>
+		Private: {{recipe.private}}<br>
 	</div>
-	<div class="col-md-2 recipeActions">
-		<!-- <div class="row recipeActions"> -->
-			<div class="col-md-12" ng-controller="RecipesActionsCtrl">
-				<button type="button" class="btn btn-default viewRecipeBtn" id="recipeViewBtn" ng-click="openRecipeViewModal(recipe.id)">View Recipe</button><br>
-				<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id, $index)">Delete Recipe</button><br>
-				<button type="button" class="btn btn-default editRecipeBtn" id="recipeViewBtn" ng-click="openRecipeEditModal(recipe.id, $index)">Edit Recipe</button>
-			</div>		
-		<!-- </div> -->
+	<div class="col-md-3 recipeActions">
+		<div class="col-md-12" ng-controller="RecipesActionsCtrl">
+			<button type="button" class="btn btn-default viewRecipeBtn" id="viewRecipeBtn" ng-click="openRecipeViewModal(recipe.id)">View Recipe</button><br>
+			<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id, $index)">Delete Recipe</button><br>
+			<button type="button" class="btn btn-default editRecipeBtn" id="editRecipeBtn" ng-click="openRecipeEditModal(recipe.id, $index)">Edit Recipe</button>
+		</div>		
 	</div>
 </div>
 <uib-pagination total-items="recipesCtrl.totalItems" ng-model="recipesCtrl.currentPage" class="pagination-md" items-per-page="recipesCtrl.itemsPerPage"></uib-pagination>
