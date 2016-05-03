@@ -1,0 +1,32 @@
+<div class="recipeIngredients create-form form large-9 medium-8 columns content ng-scope">
+	<form method="post" accept-charset="utf-8" role="form" name="recipeIngredientCreateForm" class="ng-pristine ng-valid ng-valid-min ng-valid-required"  ng-submit="addRecipeIngredient(recipeIngredientCreateForm)">
+		<div style="display:none;"><input type="hidden" name="_method" value="POST"></div>    
+		<fieldset>
+			<legend>Add Recipe Ingredient</legend>
+			<div class="form-group">Fields marked with <span style="color:red">*</span> indicate a mandatory field</div>
+			<div class="form-group select required">
+				<label class="control-label required" for="ingredient-id">Ingredient</label>
+				<select required ng-options="ingredient.name for ingredient in ingredientsList" name="ingredient_id" ng-model="newRecipeIngredient.ingredient_id" class="required form-control ng-pristine ng-untouched ng-valid ng-not-empty" id="ingredient-id">
+					<option value="">-- Select an Ingredient --</option><!-- Adding this default option ensures validation kicks in if the default is not changed -->
+				</select>
+			</div>
+			<div class="form-group number required">
+				<label class="control-label required" for="quantity">Quantity</label>
+				<input type="number" name="quantity" min="1" ng-model="newRecipeIngredient.quantity" required="required" id="quantity" class="form-control">
+			</div>
+			<div class="form-group select">
+				<label class="control-label required" for="uom-id">Uom</label>
+				<select required="required" ng-options="uom.name for uom in uomsList" name="uom_id" ng-model="newRecipeIngredient.uom_id" class="form-control" id="ingredient-id">
+					<option value="">-- Select a Unit of Measure --</option><!-- Adding this default option ensures validation kicks in if the default is not changed -->
+				</select>
+			</div>
+			<div class="form-group textarea">
+				<label class="control-label" for="instructions">Instructions</label>
+				<textarea name="instructions" ng-model="newRecipeIngredient.instructions" id="instructions" class="form-control" rows="5"></textarea>
+			</div>    
+		</fieldset>
+		<button type="submit" class="btn addRecipeIngredientButton">
+			Add Recipe Ingredient
+		</button>
+	</form>
+</div>

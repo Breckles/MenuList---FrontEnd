@@ -57,6 +57,10 @@
 	color: rgb(255, 255, 255);
 }
 
+.recipeIngredientActions{
+	margin-bottom: 1em;
+}
+
 .recipeActions, .ingredientActions {
 	text-align: center;
 }
@@ -91,7 +95,7 @@ option.disabled {
 
 #pageAlert, #modalAlert {
 	position: fixed;
-	width: 24%;
+	width: 25%;
 	top: 2%;
 	left: 38%;
 	color: black;
@@ -106,13 +110,25 @@ option.disabled {
 	background-color: rgb(255,68,68);
 }
 
-.modal.in .modal-dialog {
+/* May need to remove this */
+.modal.in .modal-dialog{
 	/* Fixes a bug in chrome.
        When some element inside the modal has position:fixed, the transforms have a weird effect of miscalculating the element's position
     */
 	 -webkit-transform: none;
 	 -ms-transform: none; // IE9 only
 	 transform: none;
+}
+
+.backBtn{	
+	float: right;
+	margin-bottom: 1em;
+}
+
+.recipeIngredients.edit-form{
+	margin-bottom: 1em;
+	margin-top: 1em;
+	border-bottom: 1px solid black;
 }
 
 

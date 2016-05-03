@@ -1,0 +1,50 @@
+<div class="recipes-index-wrapper">
+	<div class="row">
+		<div class="col-md-10">
+			<uib-pagination total-items="totalItems" ng-model="currentPage" class="pagination-md" items-per-page="itemsPerPage" ng-change="updateTrackRecipesPage()"></uib-pagination>
+		</div>
+		<div class="col-md-2">
+			<a ng-href="#/recipes/create">
+				<button type="button" class="btn btn-default" ng-click="openRecipeCreateModal()" id="createRecipeBtn">Create Recipe</button>
+			</a>
+		</div>
+	</div>
+
+	<div class="row recipeRow" ng-repeat="recipe in recipes.slice(((currentPage-1) * itemsPerPage), ((currentPage) * itemsPerPage))">
+		<div class="col-md-4 recipeImage">
+			<img ng-src="{{imageRequestUrl}}{{recipe.image}}">
+		</div>
+		<div class="col-md-5">
+			Name: {{recipe.name}}<br>
+			Description: {{recipe.description}}<br>
+			Serves: {{recipe.num_served}}<br>
+			Private: {{recipe.private}}<br>
+		</div>
+		<div class="col-md-3 recipeActions">
+			<div class="col-md-12">
+				<a ng-href="#/recipes/{{recipe.id}}">
+					<button type="button" class="btn btn-default viewRecipeBtn" id="viewRecipeBtn">
+						View Recipe
+					</button>					
+				</a>
+				<br>
+				<a ng-href="#/recipes/edit/{{recipe.id}}">
+					<button type="button" class="btn btn-default editRecipeBtn" id="editRecipeBtn">
+						Edit Recipe
+					</button>
+				</a>
+				<br>				
+				<button type="button" class="btn btn-default deleteRecipeBtn" id="deleteRecipeBtn" ng-click="deleteRecipe(recipe.id, $index)">
+					Delete Recipe
+				</button>
+			</div>		
+		</div>
+	</div>
+	<uib-pagination total-items="totalItems" ng-model="currentPage" class="pagination-md" items-per-page="itemsPerPage" ng-change="updateTrackRecipesPage()"></uib-pagination>
+</div>
+
+
+
+
+
+

@@ -2,27 +2,46 @@
 <html ng-app="AppModule">
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="css\bootstrap.min.css">
-		
-		<script type="text/javascript" src="javascript\angular.min.js"></script>
+
+		<!--Third party stuff-->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"><!--Because glyph icons won't load if I only include the bootstrap file-->		
+		<script type="text/javascript" src="javascript\angular.min.js"></script><!--version 1.5.0-->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
 		<script type="text/javascript" src="javascript\ui-bootstrap-tpls-1.2.4.js"></script>
-		<script type="text/javascript" src="javascript\AppModule.js"></script>
-		<script type="text/javascript" src="javascript\Recipes\RecipesModule.js"></script>
-		<script type="text/javascript" src="javascript\Recipes\Recipe.js"></script>
-		<script type="text/javascript" src="javascript\Recipes\RecipesInterface.js"></script>
-		<script type="text/javascript" src="javascript\Ingredients\IngredientsModule.js"></script>
-		<script type="text/javascript" src="javascript\Ingredients\Ingredient.js"></script>
-		<script type="text/javascript" src="javascript\Ingredients\IngredientsInterface.js"></script>
-		<script type="text/javascript" src="javascript\RecipeIngredients\RecipeIngredient.js"></script>
-		<script type="text/javascript" src="javascript\RecipeIngredients\RecipeIngredientsInterface.js"></script>
-		<script type="text/javascript" src="javascript\Uoms\Uom.js"></script> <!--Don't know if this will be needed--> 
-		<script type="text/javascript" src="javascript\Uoms\UomsInterface.js"></script>		
-		<script type="text/javascript" src="javascript\WeeklyMenus\WeeklyMenusModule.js"></script>
-		<script type="text/javascript" src="javascript\WeeklyMenus\WeeklyMenusInterface.js"></script>
+
+		<!--My Stuff-->
+		<script type="text/javascript" src="AppModule.js"></script>
+		<script type="text/javascript" src="routes.js"></script>		
+
+		<script type="text/javascript" src="javascript\controllers\recipes\index.js"></script>
+		<script type="text/javascript" src="javascript\controllers\recipes\create.js"></script>
+		<script type="text/javascript" src="javascript\controllers\recipes\view.js"></script>
+		<script type="text/javascript" src="javascript\controllers\recipes\edit.js"></script>
+		<script type="text/javascript" src="javascript\models\recipe\Recipe.js"></script>
+		<script type="text/javascript" src="javascript\models\recipe\RecipeInterface.js"></script>
+
+		<script type="text/javascript" src="javascript\controllers\ingredients\index.js"></script>
+		<script type="text/javascript" src="javascript\controllers\ingredients\create.js"></script>
+		<script type="text/javascript" src="javascript\models\ingredient\Ingredient.js"></script>
+		<script type="text/javascript" src="javascript\models\ingredient\IngredientInterface.js"></script>
+
+		<script type="text/javascript" src="javascript\models\recipeIngredient\RecipeIngredient.js"></script>
+		<script type="text/javascript" src="javascript\models\recipeIngredient\RecipeIngredientInterface.js"></script>
+
+		<script type="text/javascript" src="javascript\models\uom\Uom.js"></script> <!--Don't know if this will be needed--> 
+		<script type="text/javascript" src="javascript\models\uom\UomInterface.js"></script>	
+
+		<script type="text/javascript" src="javascript\controllers\weeklyMenus\index.js"></script>
+		<script type="text/javascript" src="javascript\models\weeklyMenu\WeeklyMenu.js"></script>
+		<script type="text/javascript" src="javascript\models\weeklyMenu\WeeklyMenuInterface.js"></script>
+
+		<!--Services-->
+		<script type="text/javascript" src="javascript\services\alertService.js"></script>
+		<script type="text/javascript" src="javascript\services\navClassService.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="css\app.css">
 	</head>
-	<body ng-controller="AppModuleController as app">
+	<body ng-controller="AppController as app">
 
 		<div class="container-fluid">
 
@@ -47,14 +66,14 @@
 
 				<div class="col-md-10">
 					<ul class="nav nav-pills" id="pill-selector">
-						<li ng-class="{active:app.isPanelSelected('weeklyMenusPanel')}">
-							<a href ng-click="app.selectPanel('weeklyMenusPanel')">Weekly Menus</a>
+						<li ng-class="getNavClass('/weeklyMenus')">
+							<a href="#/weeklyMenus">Weekly Menus</a>
 						</li>
-						<li ng-class="{active:app.isPanelSelected('recipesPanel')}">
-							<a href ng-click="app.selectPanel('recipesPanel')">Recipes</a>
+						<li ng-class="getNavClass('/recipes')">
+							<a href="#/recipes">Recipes</a>
 						</li>
-						<li ng-class="{active:app.isPanelSelected('ingredientsPanel')}">
-							<a href ng-click="app.selectPanel('ingredientsPanel')">Ingredients</a>
+						<li ng-class="getNavClass('/ingredients')">
+							<a href="#/ingredients">Ingredients</a>
 						</li>
 					</ul>
 				</div>
@@ -72,8 +91,10 @@
 					</ul>
 				</div>
 			
-
-				<div class="col-md-10" >
+				<div class="col-md-10 main-wrapper">
+					<div ng-view></div>
+				</div>
+				<!-- <div class="col-md-10" >
 					<div class="panel" ng-show="app.isPanelSelected('weeklyMenusPanel')">
 						<div class="panel-body">
 							<weekly-menus></weekly-menus>
@@ -91,7 +112,7 @@
 							<ingredients></ingredients>	
 						</div>							
 					</div>	
-				</div>
+				</div> -->
 
 				<div class="col-md-1">
 					<ul class="list-inline">
@@ -100,6 +121,8 @@
 					</ul>
 				</div>
 			</div>	
+
+
 		</div>
 	</body>
 </html>

@@ -1,0 +1,33 @@
+<div class="ingredients-index-wrapper">
+	<div class="row">
+		<div class="col-md-10">
+			<uib-pagination total-items="totalItems" ng-model="currentPage" class="pagination-md" items-per-page="itemsPerPage"></uib-pagination>
+		</div>
+		<div class="col-md-2">
+			<a href="#/ingredients/create">
+				<button type="button" class="btn btn-default" ng-click="openIngredientCreateModal()" id="createIngredientBtn">
+					Create Ingredient
+				</button>
+			</a>
+		</div>
+	</div>
+
+	<div class="row ingredientRow" ng-repeat="ingredient in ingredients.slice(((currentPage-1) * itemsPerPage), ((currentPage) * itemsPerPage))">
+		<div class="col-md-4 ingredientImage">
+			<img ng-src="{{imageRequestUrl}}{{ingredient.image}}">
+		</div>
+		<div class="col-md-5">
+			<div class="row ingredientInfo">
+				Name: {{ingredient.name}}<br>
+				Category: {{ingredient.category.name}}<br>
+				Information: {{ingredient.information}}<br>
+			</div>		
+		</div>
+		<div class="col-md-3 ingredientActions">
+			<div class="col-md-12">
+				<button type="button" class="btn btn-default deleteIngredientBtn" id="deleteIngredientBtn" ng-click="deleteIngredient(ingredient.id, $index)">Delete Ingredient</button>	
+			</div>		
+		</div>
+	</div>
+	<uib-pagination total-items="totalItems" ng-model="currentPage" class="pagination-md" items-per-page="itemsPerPage"></uib-pagination>
+</div>

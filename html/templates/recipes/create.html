@@ -1,0 +1,30 @@
+<div class="row"> 
+	<div class="col-md-6">
+		<ng-include src="'html/templates/recipes/createForm.html'"></ng-include>
+	</div> 
+	<div class="col-md-6"> 
+		<div class="row"> 
+			<div class="col-md-12"> 
+				<legend>Recipe Ingredients</legend>				
+				<ul>
+					<li ng-repeat="newRecipeIngredient in newRecipeIngredients">
+						{{newRecipeIngredient.quantity}} {{newRecipeIngredient.uom_id.name}} {{newRecipeIngredient.ingredient_id.name}} <span ng-show="newRecipeIngredient.instructions">({{newRecipeIngredient.instructions}})</span>
+					</li>
+					<li ng-show="isNewRecipeIngredientsEmpty()"><i>No Ingredients have been added to this recipe yet</i></li>
+				</ul>
+			</div> 
+		</div> 
+		<div class="row"> 
+			<div class="col-md-12"> 
+				<ng-include src="'html/templates/recipeIngredients/createForm.html'"></ng-include>
+			</div> 
+		</div> 
+	</div> 	
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<a href="#/recipes">
+        	<button class="btn btn-warning backBtn" type="button">Cancel</button>
+        </a>
+	</div>
+</div>
